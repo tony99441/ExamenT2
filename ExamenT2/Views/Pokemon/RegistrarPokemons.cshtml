@@ -5,11 +5,14 @@
     <label>Nombre</label>
     <input name="Nombre" required="" value="@Model.Nombre" />
     <label>Tipo</label>
-    <select name="Tipo">
-        <option name="">--Elija un tipo--</option>
+    <select name="Tipo" required="" >
+        <option name="" >Elija un tipo</option>
         @foreach (var item in ViewBag.tipos)
         {
-<option value="@item"> @item</option>}
+    <option value="@item"> @item</option>
+
+                   }
+
     </select>
     <div class="form-group">
         Imagen

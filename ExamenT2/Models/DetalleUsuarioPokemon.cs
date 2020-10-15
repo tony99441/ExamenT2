@@ -10,6 +10,8 @@ namespace ExamenT2.Models
         public int Id { get; set; }
         public int IdUsuario{ get; set; }
         public int IdPokemon { get; set; }
+        public DateTime FechaCaptura { get; set; }
+
 
         public Pokemon pokemon { get; set; }
         public Usuario usuario{ get; set; }

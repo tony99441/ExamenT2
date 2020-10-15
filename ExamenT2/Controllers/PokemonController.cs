@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace ExamenT2.Controllers
@@ -30,9 +31,16 @@ namespace ExamenT2.Controllers
 
 
 
-        public IActionResult TodosLosPokemons() {
-            var AllPokemons = _context.pokemons.ToList();
-            return View(AllPokemons);
+        public IActionResult TodosLosPokemons(string busqueda="") {
+
+            var query = _context.pokemons.AsQueryable();
+            if (!String.IsNullOrEmpty(busqueda))
+            {
+                query = query.Where(o => o.Nombre.Contains(busqueda));
+            }
+
+            var pokemones = query.ToList();
+            return View(pokemones);
         }
 
         public IActionResult RegistrarPokemons() {
@@ -43,8 +51,21 @@ namespace ExamenT2.Controllers
         }
         public IActionResult RegistrarPokemonsP(Pokemon pokemon, IFormFile Imagen)
         {
-          
-            if (Imagen.Length > 0)
+
+            if (pokemon.Nombre == null || pokemon.Nombre == "") {
+                ModelState.AddModelError("Pokemon", "Nombre es obligatorio");
+            }
+           if (pokemon.Tipo == null || pokemon.Tipo == "Elija un tipo") {
+                ModelState.AddModelError("Pokemon", "Elije un tipo de Pokemon");
+            }
+            if (pokemon.Imagen == null || pokemon.Imagen == "")
+            {
+                ModelState.AddModelError("Pokemon", "Elije una imagen");
+            }
+
+
+
+                if (Imagen.Length > 0)
             {
                 var filePath = Path.Combine(env.WebRootPath, "images", Imagen.FileName);
 
@@ -62,17 +83,22 @@ namespace ExamenT2.Controllers
         }
         public IActionResult MisPokemones() {
             var user = HttpContext.Session.Get<Usuario>("sessionUser");
-            var detalle = _context.detalleUsuarioPokemons.Where(o => o.IdUsuario == user.Id).ToList().Select(o => o.IdPokemon).ToList();
+            var detalle = _context.detalleUsuarioPokemons.Where(o => o.IdUsuario == user.Id).ToList();
             var pokemon = _context.pokemons.ToList();
             List<Pokemon> misPokemons = new List<Pokemon>();
-            foreach ( var items in detalle) {
-               var  pokemonAgregar = pokemon.Where(o => o.Id == items).FirstOrDefault();
-                misPokemons.Add(pokemonAgregar);
+            Dictionary<int, Pokemon> indexPokemon = new Dictionary<int, Pokemon>();
+            foreach(var item1 in pokemon)
+            {
+                indexPokemon.Add(item1.Id, item1);
+
             }
+            ViewBag.Index = indexPokemon;
+            ViewBag.Detalle = detalle;
+
+         
            
             ViewBag.Entrenador = user;
-            ViewBag.MisPokemones = misPokemons;
-            return View(pokemon);
+            return View();
         }
 
         public IActionResult CapturarPokemon(int IdPokemon) {
@@ -81,6 +107,7 @@ namespace ExamenT2.Controllers
             DetalleUsuarioPokemon nuevopokemon = new DetalleUsuarioPokemon();
             nuevopokemon.IdPokemon = IdPokemon;
             nuevopokemon.IdUsuario = user.Id;
+            nuevopokemon.FechaCaptura = DateTime.Now;
             _context.detalleUsuarioPokemons.Add(nuevopokemon);
             _context.SaveChanges();
             return RedirectToAction("TodosLosPokemons");

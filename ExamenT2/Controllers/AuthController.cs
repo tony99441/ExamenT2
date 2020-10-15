@@ -37,7 +37,7 @@ namespace ExamenT2.Controllers
                 return View();
 
 
-            //     HttpContext.Session.Set("sessionUser", userv);
+           
             HttpContext.Session.Set("sessionUser", userv);
 
             var claims = new List<Claim>()
@@ -49,8 +49,10 @@ namespace ExamenT2.Controllers
             var principal = new ClaimsPrincipal(userIdentity);
 
             HttpContext.SignInAsync(principal);
-
+         
             return RedirectToAction("TodosLosPokemons", "Pokemon");
+
+          
         }
     }
 }
