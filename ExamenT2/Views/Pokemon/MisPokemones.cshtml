@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Mis Pokemones</h1>
+<h5>Nombre:</h5>
+<p> @ViewBag.Entrenador.Nombre</p>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in @ViewBag.MisPokemones)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Nombre</td>
+                <td>@item.Tipo</td>
+
+                <td>
+                    <img height="50" src="~/images/@item.Imagen" />
+                </td>
+                <td>
+                    <a href="/Pokemon/EliminarPokemon?IdPokemon=@item.Id">Soltar pokemon</a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

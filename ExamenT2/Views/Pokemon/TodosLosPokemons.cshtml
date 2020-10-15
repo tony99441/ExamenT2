@@ -1,0 +1,27 @@
+﻿@{ ViewData["Title"] = "Index"; }
+
+<a href="/Pokemon/RegistrarPokemons">Agregar Pokemon</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+<tr>
+    <td>@item.Id</td>
+    <td>@item.Nombre</td>
+    <td>@item.Tipo</td>
+    <td>
+        <img height="50" src="~/images/@item.Imagen" />
+    </td>
+    <td>
+        <a href ="/Pokemon/CapturarPokemon?IdPokemon=@item.Id"><strong>Capturar Pokemon</strong></a>
+    </td>
+</tr>}
+    </tbody>
+</table>

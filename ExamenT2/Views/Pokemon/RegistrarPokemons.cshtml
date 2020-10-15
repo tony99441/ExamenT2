@@ -1,0 +1,21 @@
+﻿@{ ViewData["Title"] = "Crear"; }
+
+<h1>Crear</h1>
+<form action="/Pokemon/RegistrarPokemonsP" method="post" enctype="multipart/form-data">
+    <label>Nombre</label>
+    <input name="Nombre" required="" value="@Model.Nombre" />
+    <label>Tipo</label>
+    <select name="Tipo">
+        <option name="">--Elija un tipo--</option>
+        @foreach (var item in ViewBag.tipos)
+        {
+<option value="@item"> @item</option>}
+    </select>
+    <div class="form-group">
+        Imagen
+        <input type="file" name="Imagen" />
+
+    </div>
+
+    <button>Guardar</button>
+</form>
